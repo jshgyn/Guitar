@@ -1,0 +1,109 @@
+/*------------------------ MAIN ------------------------*/
+
+body {
+	font-family: 'Droid Sans', sans-serif;
+	margin: 0px;
+}
+
+/*------------------------ LEFT MENU SECTION ------------------------*/
+
+.left_section {
+	position: absolute;
+	background-color: #9D9A9A;
+	width: 20%;
+	height: 60%;
+	top: 20%;
+	z-index: 1;
+
+	-moz-border-radius-bottomright: 20px 20px;
+	border-bottom-right-radius: 20px 20px;
+}
+
+#hide_menu {
+	position: absolute;
+	background-color: #6D6A6A;
+	width: 50px;
+	height: 50px;
+	right: 0px;
+	z-index: 2;
+}
+#show_menu {
+	position: absolute;
+	background-color: #6D6A6A;
+	width: 0px;
+	height: 50px;
+	top: 20%;
+	left: 0px;
+	z-index: 2;
+}
+
+.menu_item {
+	width: 96%;
+	height: 30px;
+	background-color: #ADAAAA;
+	padding-top: 10px;
+	padding-left: 4%;
+	cursor: pointer;
+}
+
+/*------------------------ TOP SECTION ------------------------*/
+
+.top_section {
+	position: absolute;
+	background-color: #ffffff;
+	width: 100%;
+	height: 50%;
+	top: 0px;
+	z-index: 0;
+}
+
+/*------------------------ BOTTOM SECTION ------------------------*/
+.bottom_section {
+	position:absolute;
+	background-color: #88CCD2;	
+	width: 100%;
+	height: 50%;
+	bottom: 0px;
+	z-index: 0;
+}
+
+/*------------------------ PEDALS ------------------------*/
+
+.pedal {
+	position: absolute;
+	background-color: black;
+	width: 120px;
+	height: 180px;
+	padding-top: 10px;
+}
+
+.knob {
+	background-color: white;
+	width: 25px;
+	height: 25px;
+	float: left;
+	margin: 10px 17px;
+	-moz-border-radius: 20px 20px;
+	border-radius: 20px 20px;
+}
+
+.light {
+	position: absolute;
+	background-color: green;
+	width: 15px;
+	height: 15px;
+	float: left;
+	bottom: 70px;
+	left: 52;
+	-moz-border-radius: 20px 20px;
+	border-radius: 20px 20px;
+	z-index: 2;
+}
+.switch {
+	position: absolute;
+	background-color: grey;
+	width: 30px;
+	height: 30px;
+	bottom: 30px;
+	left: 45;
+}
