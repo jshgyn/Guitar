@@ -1,0 +1,136 @@
+/*------------------------ MAIN ------------------------*/
+
+body {
+	font-family: 'Droid Sans', sans-serif;
+	margin: 0px;
+}
+
+/*------------------------ LEFT MENU SECTION ------------------------*/
+
+.left_section {
+	position: absolute;
+	background-color: #ddd;
+	width: 0%;
+	height: 60%;
+	top: 20%;
+	z-index: 1;
+	display: none;
+
+	-moz-border-radius-bottomright: 20px 20px;
+	border-bottom-right-radius: 20px 20px;
+}
+
+#hide_menu {
+	position: absolute;
+	background-color: #6D6A6A;
+	width: 50px;
+	height: 50px;
+	right: 0px;
+	z-index: 2;
+}
+#show_menu {
+	position: absolute;
+	background-color: #6D6A6A;
+	width: 20px;
+	height: 50px;
+	top: 20%;
+	left: 0px;
+	z-index: 2;
+}
+
+.menu_item {
+	width: 96%;
+	height: 30px;
+	background-color: #eee;
+	padding-top: 10px;
+	padding-left: 4%;
+	cursor: pointer;
+}
+
+/*------------------------ TOP SECTION ------------------------*/
+
+.top_section {
+	position: absolute;
+	background-color: #ffffff;
+	width: 100%;
+	height: 25%;
+	top: 0px;
+	z-index: 0;
+}
+
+/*------------------------ BOTTOM SECTION ------------------------*/
+.bottom_section {
+	position:absolute;
+	background-color: #fff;	
+	width: 100%;
+	height: 75%;
+	bottom: 0px;
+	z-index: 0;
+}
+
+/*------------------------ PEDALS ------------------------*/
+
+.pedal {
+	position: absolute;
+	left: 50%;
+	width: 215px;
+	height: 347px;
+}
+
+.background {
+	position: absolute;
+	padding-top: 0px;
+	background-size:215px 347px;
+	width: 215px;
+	height: 347px;
+}
+#delay_background {
+	background-image:url('../img/royaldelay_base.png');
+}
+
+.knob {
+	position: absolute;
+	background-image:url('../img/royaldelay_knob.png');
+	background-size:60px 60px;
+	width: 60px;
+	height: 60px;
+}
+
+#delay_time {
+	top: 20px;
+	left: 30px;
+
+}
+#delay_volume {
+	top: 20px;
+	right: 30px;
+}
+#delay_feedback {
+	top: 70px;
+	right: 78px;
+}
+
+.light {
+	position: absolute;
+	background-image:url('../img/royaldelay_light.png');
+	background-size:215px 347px;
+	width: 215px;
+	height: 347px;
+	display: none;
+}
+.switch {
+	position: absolute;
+	background-image:url('../img/royaldelay_switch.png');
+	background-size:56px 56px;
+	width: 56px;
+	height: 56px;
+	bottom: 75px;
+	margin-left: 80px;
+}
+.text {
+	font-size: 15px;
+	position: absolute;
+	bottom: 2px;
+	left: 5px;
+	color: white;
+}
