@@ -88,9 +88,13 @@ body {
 	background-image:url('../img/royaldelay_base.png');
 }
 
+#drive_background {
+	background-image:url('../img/japdrive_base.png');
+}
+
 .knob {
 	position: absolute;
-	background-image:url('../img/royaldelay_knob.png');
+	background-image:url('../img/knob_1.png');
 	background-size:60px 60px;
 	width: 60px;
 	height: 60px;
@@ -109,6 +113,13 @@ body {
 	top: 70px;
 	right: 78px;
 }
+
+#drive_amount {
+	top: 55px;
+	left: 78px;
+
+}
+
 
 .light {
 	position: absolute;

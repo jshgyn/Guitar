@@ -5,21 +5,25 @@ var audioInput = null;
 var wetGain = null;
 var outputMix = null;
 
+var wetGainVal = 0;
+
+// --------- Delay ---------------------------------------------------------------------------
+
 var delayActive = false;
+var delayController = null;
+
 var delayNode = null;
 var delayGainNode = null;
-var delayController = null;
+
 var delayTime = 0.1;
 var delayFeedback = 0.1;
 
 function createDelay() {
     delayNode = audioContext.createDelay();
     delayNode.delayTime.value = delayTime;
-    // dtime = delayNode;
 
     delayGainNode = audioContext.createGain();
     delayGainNode.gain.value = delayFeedback;
-    // dregen = delayGainNode;
 
     delayGainNode.connect( delayNode );
     delayNode.connect( delayGainNode );
@@ -35,13 +39,17 @@ function updateDelay(x, val) {
         switch (x)
         {
             case "t":
-                delayNode.delayTime.value = (val+35)/360;
+                delayTime = val/360;
+                delayNode.delayTime.value = delayTime;
                 break;
             case "v":
-
+                wetGainVal = val/360;
+                wetGain.gain.value = wetGainVal;
+                if (wetGain.gain.value > 1) { wetGain.gain.value = 1; }
                 break;
             case "f":
-                delayGainNode.gain.value = (val+35)/360;
+                delayFeedback = val/360;
+                delayGainNode.gain.value = delayFeedback;
                 if (delayGainNode.gain.value > 1) { delayGainNode.gain.value = 1; }
                 break;
         }
@@ -50,6 +58,40 @@ function updateDelay(x, val) {
     // addEffect("delay"); 
 }
 
+// --------- Drive ---------------------------------------------------------------------------
+
+var driveActive = false;
+var driveNode = null;
+var driveAmount = 1.0;
+function createDrive() {
+    driveNode = new WaveShaper( audioContext );
+    driveNode.output.connect ( wetGain )
+    driveNode.output.connect ( outputMix )
+    driveNode.setDrive(driveAmount);
+
+    driveActive = true;
+    return driveNode.input;
+
+}
+
+function updateDrive(x, val) {
+    if (driveActive)
+    {
+        switch (x)
+        {
+            case "d":
+                driveAmount = (val/360)*50;
+                driveNode.setDrive(driveAmount);
+                if (delayActive) { 
+                    removeEffect("delay");
+                    addEffect("delay");
+                }
+                break;
+        }
+    }
+}
+
+// --------- MAIN ---------------------------------------------------------------------------
 
 function audioStream(stream) {
     // Create an AudioNode from the stream.
@@ -70,8 +112,15 @@ function addEffect(type) {
         case "delay":
             delayController = createDelay();
             audioInput.connect( delayController );
+            if (driveActive) { delayController.connect( driveController ) }
             break;
-    }
+        case "drive":
+            driveController = createDrive();
+            audioInput.connect( driveController );
+            // wetGain.connect( driveController );
+            // outputMix.connect( driveController );
+            if (delayActive) { driveController.connect( delayController ) }
+   }
 }
 
 function removeEffect(type) {
@@ -79,6 +128,11 @@ function removeEffect(type) {
     {
         case "delay":
             delayController.disconnect(0);
+            delayActive = false;
+            break;
+        case "drive":
+            driveController.disconnect(0);
+            driveActive = false;
             break;
     }
 }
