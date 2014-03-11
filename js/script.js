@@ -29,41 +29,26 @@ $( document ).ready(function() {
 	});
 
 // -------- PEDAL --------------------------------
-	var fxcontrol_delay = 0;
-	var fxcontrol_drive = 0;
+	var fxcontrol_delay = 1;
+	var fxcontrol_drive = 1;
 	// add pedal
 	function addPedal (type) {
 		switch (type)	
 		{
 			case "delay" :
-				$.get("pedal_delay.html", function(data){
-			    	$(".pedal_section").append(data);
-			   		$( ".pedal" ).draggable({ containment: ".bottom_section", scroll: false, cancel: ".knob" });
-				});
-				if (fxcontrol_delay==0)
-				{
-					var js = document.createElement("script");
-					js.type = "text/javascript";
-					js.src = "js/fxcontrol_delay.js";
-					document.body.appendChild(js);
-					fxcontrol_delay = 1;
-				}
-				break;
+				var js = document.createElement("script");
+				js.type = "text/javascript";
+				js.src = "js/fx_delay.js";
+				document.body.appendChild(js);
+				fxcontrol_drive = 1;
+				break;	
 			case "drive" :
-				$.get("pedal_drive.html", function(data){
-			    	$(".pedal_section").append(data);
-			   		$( ".pedal" ).draggable({ containment: ".bottom_section", scroll: false, cancel: ".knob" });
-				});
-				if (fxcontrol_drive==0)
-				{
-					var js = document.createElement("script");
-					js.type = "text/javascript";
-					js.src = "js/fxcontrol_drive.js";
-					document.body.appendChild(js);
-					fxcontrol_drive = 1;
-				}
-				break;
-				
+				var js = document.createElement("script");
+				js.type = "text/javascript";
+				js.src = "js/fx_drive.js";
+				document.body.appendChild(js);
+				fxcontrol_drive = 1;
+				break;			
 		}
 
 	}

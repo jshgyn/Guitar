@@ -58,9 +58,18 @@ function updateDelay(x, val) {
     // addEffect("delay"); 
 }
 
+function restartDelay() {
+    if (delayActive) { 
+        removeEffect("delay");
+        addEffect("delay");
+    }
+}
+
+
 // --------- Drive ---------------------------------------------------------------------------
 
 var driveActive = false;
+var driveController = null;
 var driveNode = null;
 var driveAmount = 1.0;
 function createDrive() {
@@ -82,12 +91,16 @@ function updateDrive(x, val) {
             case "d":
                 driveAmount = (val/360)*50;
                 driveNode.setDrive(driveAmount);
-                if (delayActive) { 
-                    removeEffect("delay");
-                    addEffect("delay");
-                }
+                restartDelay();
                 break;
         }
+    }
+}
+
+function restartDrive() {
+    if (driveActive) { 
+        removeEffect("drive");
+        addEffect("drive");
     }
 }
 
@@ -119,7 +132,7 @@ function addEffect(type) {
             audioInput.connect( driveController );
             // wetGain.connect( driveController );
             // outputMix.connect( driveController );
-            if (delayActive) { driveController.connect( delayController ) }
+            if (delayActive) { driveController.connect( delayController ); restartDelay(); }
    }
 }
 
@@ -128,10 +141,15 @@ function removeEffect(type) {
     {
         case "delay":
             delayController.disconnect(0);
+            delayController = null;
+            delayNode = null;
+            delayGainNode = null;
             delayActive = false;
             break;
         case "drive":
             driveController.disconnect(0);
+            driveController = null;
+            driveNode = null;
             driveActive = false;
             break;
     }
