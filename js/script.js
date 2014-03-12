@@ -28,30 +28,6 @@ $( document ).ready(function() {
 		addPedal("drive");
 	});
 
-// -------- PEDAL --------------------------------
-	var fxcontrol_delay = 1;
-	var fxcontrol_drive = 1;
-	// add pedal
-	function addPedal (type) {
-		switch (type)	
-		{
-			case "delay" :
-				var js = document.createElement("script");
-				js.type = "text/javascript";
-				js.src = "js/fx_delay.js";
-				document.body.appendChild(js);
-				fxcontrol_drive = 1;
-				break;	
-			case "drive" :
-				var js = document.createElement("script");
-				js.type = "text/javascript";
-				js.src = "js/fx_drive.js";
-				document.body.appendChild(js);
-				fxcontrol_drive = 1;
-				break;			
-		}
-
-	}
 
 // -------- END --------------------------------
 });

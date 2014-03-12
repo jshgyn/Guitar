@@ -84,11 +84,11 @@ body {
 	width: 215px;
 	height: 347px;
 }
-#delay_background {
+.delay_background {
 	background-image:url('../img/royaldelay_base.png');
 }
 
-#drive_background {
+.drive_background {
 	background-image:url('../img/japdrive_base.png');
 }
 
@@ -100,21 +100,21 @@ body {
 	height: 60px;
 }
 
-#delay_time {
+.delay_time {
 	top: 20px;
 	left: 30px;
 
 }
-#delay_volume {
+.delay_volume {
 	top: 20px;
 	right: 30px;
 }
-#delay_feedback {
+.delay_feedback {
 	top: 70px;
 	right: 78px;
 }
 
-#drive_amount {
+.drive_amount {
 	top: 55px;
 	left: 78px;
 
