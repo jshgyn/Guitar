@@ -27,7 +27,21 @@ $( document ).ready(function() {
 	$("#new_drive").click(function() {	
 		addPedal("drive");
 	});
+	$("#new_radio").click(function() {	
+		addPedal("radio");
+	});
 
-
+	$("#rec_start").click(function() {	
+		recStart();
+	});
+	$("#rec_stop").click(function() {	
+		recStop();
+	});
+	$("#loop_stop").click(function() {	
+		loopStop();
+	});
+	$("#loop_start").click(function() {	
+		loopStart();
+	});	
 // -------- END --------------------------------
 });
