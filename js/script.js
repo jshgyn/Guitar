@@ -1,5 +1,6 @@
 $( document ).ready(function() {
 
+	$(".loop_countdown").hide();
 // -------- MENU --------------------------------
 	showMenu();
 	// show menu
@@ -43,5 +44,57 @@ $( document ).ready(function() {
 	$("#loop_start").click(function() {	
 		loopStart();
 	});	
-// -------- END --------------------------------
+
+
+	// -------- UI -------------------------------
+	$("#loop_startstop").click(function() {	
+		if (startOrStop=="start")
+		{
+			loopStart();
+			updateLoopLight("green");
+			updateLoopStartStop("stop");
+		}
+		else if (startOrStop=="stop")
+		{
+			loopStop();
+			updateLoopLight("off");
+			updateLoopStartStop("start");
+		}
+
+	});
+
 });
+var startOrStop = "stop";
+// -------- UI -------------------------------
+function updateBPMText(averageTap) {
+	var averageBPM = Math.round(60000/averageTap);
+	document.getElementById("loop_bpm").innerHTML = averageBPM+"<i>bpm</i>";
+}
+function updateCountdownText(count, clear) {
+	if (clear==true)
+	{
+		document.getElementById("loop_countdown").innerHTML = "";
+		$(".loop_countdown").hide();
+	}
+	else
+	{
+		document.getElementById("loop_countdown").innerHTML = count;
+		$(".loop_countdown").show();
+	}
+}
+function updateLoopLight(colour) {
+	// alert(colour);
+	if (colour=="red") {  $('.loop_light').css('background-image', 'url(img/loop_light_red.png)'); }
+	else if (colour=="green") {  $('.loop_light').css('background-image', 'url(img/loop_light_green.png)'); updateLoopStartStop("stop");}
+	else if (colour=="off") {  $('.loop_light').css('background-image', 'url(img/loop_light_bw.png)'); updateLoopStartStop("start");}
+}
+function updateLoopStartStop(i) {
+	if (i=="start"){ 
+		document.getElementById("loop_startstop").innerHTML = "Start";
+		startOrStop = "start"; 
+	}
+	else if (i=="stop"){ 
+		document.getElementById("loop_startstop").innerHTML = "Stop";
+		startOrStop = "stop"; 
+	}
+}

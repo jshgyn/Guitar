@@ -68,6 +68,66 @@ body {
 	z-index: 0;
 }
 
+/*------------------------ LOOPER ------------------------*/
+
+.loop_section {
+	color: white;
+	position: absolute;
+	width: 20%;
+	height: 66px;
+	padding: 3px;
+	background-color: #ddd;
+	left: 40%;
+
+	/* Firefox */
+    display:-moz-box;
+    -moz-box-pack:center;
+    -moz-box-align:center;
+
+    /* Safari and Chrome */
+    display:-webkit-box;
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+}
+
+.loop_light {
+	width: 60px;
+	height: 60px;
+	background-image:url('../img/loop_light_bw.png');
+}
+
+.loop_countdown {
+	position: fixed;
+	width: 99%;
+	height: 99%;
+	font-color: black;
+	font-size: 300px;
+	z-index: 100;
+	padding-top: 10%;
+	text-align:center;
+}
+.loop_bpm {
+	position: absolute;
+	font-size: 30px;
+	right: 5px;
+	top: 22%;
+	/*padding-left: 10px;*/
+}
+.loop_bpm i {
+	font-size: 15px;
+}
+
+.loop_startstop {
+	position: absolute;
+	float: left;
+	font-size: 30px;
+	left: 15px;
+	top: 22%;
+	/*margin-top: 25px;*/
+	display: block;
+	cursor: pointer
+
+}
 /*------------------------ PEDALS ------------------------*/
 
 .pedal {

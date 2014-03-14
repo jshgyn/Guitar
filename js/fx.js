@@ -291,16 +291,18 @@ function Radio() {
 var recorder;
 var recording = false;
 function recStart() {
-  recorder = new Recorder(latestNode);
-  recorder.record();
-  recording = true;
+    recorder = new Recorder(latestNode);
+    recorder.record();
+    updateLoopLight("red");
+    recording = true;
 }
 function recStop() {
-  recorder.stop();
-  recording = false;
-  recorder.exportWAV(function(s) {
-    document.getElementById('loopPlayer').src = window.URL.createObjectURL(s);
-  });
+    recorder.stop();
+    recording = false;
+    recorder.exportWAV(function(s) {
+        document.getElementById('loopPlayer').src = window.URL.createObjectURL(s);
+    });
+    updateLoopLight("green");
 }
 
 function loopStop() {
@@ -311,18 +313,123 @@ function loopStart() {
     document.getElementById('loopPlayer').play();
 }
 
-$(window).keypress(function(e) {
-    if (e.which === 32) {
-        if (recording==true)
+// --------- TAP TEMPO ---------------------------------------------------------------------------
+var tapInProgress = false; 
+var tapComplete = false;
+
+var thisTapStart; 
+var averageTap = 0;
+var totalTap = 0;
+var tapCount = 0;
+var countDownCount = 4;
+var recCount = 8;
+
+function playClick() {
+    document.getElementById('clickPlayer').currentTime = 0;   
+    document.getElementById('clickPlayer').play();
+}
+function recordTap() {
+    setTimeout(function() {
+        playClick();
+        recCount --;
+        if (recCount>0)
         {
-            recStop();
+            recordTap();
         }
         else
         {
-            recStart();
+            recCount = 8;
+            setTimeout(recStop, averageTap);
         }
+    }, averageTap);   
+}
+function countDown() {
+    // for (i=0; i<4; i++)
+    // {
+    setTimeout(function() {
+        playClick();
+        countDownCount --;        
+        updateCountdownText(countDownCount+1);
+        if (countDownCount>0)
+        {
+            countDown();
+        }
+        else
+        {
+            countDownCount = 4;
+            setTimeout(function() {
+                recStart();
+                updateCountdownText(0, true);
+            }, averageTap);
+            recordTap();
+        }
+    }, averageTap);
+    // }
+}
+
+function newTap() {
+    playClick();
+    tapCount ++;
+
+    if (tapInProgress==false)
+    {
+        tapInProgress = true;
+    }   
+    else
+    {
+        var thisTapEnd = new Date();
+        totalTap += (thisTapEnd-thisTapStart);
+    } 
+
+    if (tapCount==4) {
+        averageTap = totalTap/3;
+        updateBPMText(averageTap);
+        tapCount = 0;
+        totalTap = 0;
+        tapComplete = true;
+        tapInProgress = false;
+        countDown();
+    }
+    else {
+        thisTapStart = new Date();  
+    }
+}
+
+// --------- KEY EVENTS ---------------------------------------------------------------------------
+
+$(window).keypress(function(e) {
+    switch (e.which)   
+    {
+        case 82 :
+            if (recording==false)
+            {
+                recStart();
+            }
+            else
+            {
+                recStop();
+            }
+            break;
+
+        case 32 :
+            if (tapComplete==false && tapInProgress==false)
+            {
+                // start tap
+                newTap();
+            }
+            else if (tapComplete==false && tapInProgress==true)  
+            {
+                // carry on tap
+                newTap();
+            }
+            else if (tapComplete==true)
+            {
+                // end tap
+                // countDown();
+            }
     }
 });
+
 
 // --------- MAIN ---------------------------------------------------------------------------
 
@@ -332,9 +439,11 @@ function audioStream(stream) {
     // Connect it to the destination to hear yourself (or any other node for processing!)
  
     dryGain = audioContext.createGain();
+    dryGain.gain.value = 0.5;
     audioInput.connect(dryGain);
     latestNode = dryGain;
     wetGain = audioContext.createGain();  
+    wetGain.gain.value = 0.5;
     audioInput.connect(wetGain);
 
     dryGain.connect( audioContext.destination );
