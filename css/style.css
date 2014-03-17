@@ -72,7 +72,7 @@ body {
 
 .loop_section {
 	color: white;
-	position: absolute;
+	position: relative;
 	width: 20%;
 	height: 66px;
 	padding: 3px;
@@ -106,11 +106,18 @@ body {
 	padding-top: 10%;
 	text-align:center;
 }
+.loop_bar_display {
+	position: absolute;
+	/*font-size: 30px;*/
+	right: 5px;
+	/*top: 40%;*/
+	/*padding-left: 10px;*/
+}
 .loop_bpm {
 	position: absolute;
 	font-size: 30px;
 	right: 5px;
-	top: 22%;
+	top: 40%;
 	/*padding-left: 10px;*/
 }
 .loop_bpm i {
@@ -119,15 +126,59 @@ body {
 
 .loop_startstop {
 	position: absolute;
-	float: left;
 	font-size: 30px;
 	left: 15px;
-	top: 22%;
+	top: 40%;
 	/*margin-top: 25px;*/
 	display: block;
 	cursor: pointer
+}
+.loop_bars {
+	position: absolute;
+	font-size: 30px;
+	left: 15px;
+	/*top: 22%;*/
+	/*margin-top: 25px;*/
+	display: block;
+	cursor: pointer
+}
+
+
+/*------------------------ BACKING TRACKS ------------------------*/
+
+.backing_section {
+	color: white;
+	position: relative;
+	width: 20%;
+	height: 20px;
+	padding-left: 3px;
+	padding-right: 3px;
+	background-color: #eee;
+	left: 40%;
+
 
 }
+
+.backing_startstop {
+	position: absolute;
+	height: 20px;
+	width: 20px;
+	background-color: #000;
+	left: 10px;
+	cursor: pointer;
+}
+
+.backing_file {
+	color: black;
+	position: absolute;
+	font-size: 30px;
+	left: 40px;
+	/*top: 22%;*/
+	/*margin-top: 25px;*/
+	display: block;
+	cursor: pointer
+}
+
 /*------------------------ PEDALS ------------------------*/
 
 .pedal {
@@ -180,6 +231,36 @@ body {
 
 }
 
+.slider {
+	position: absolute;
+	left: 25%;
+	top: 75px;
+}
+.ui-slider {
+	width: 50%;
+}
+
+.slider.delay_time {
+	float: left;
+	top: 50px;
+	height: 100px;
+	width: 10px;
+	left: 46px;
+}
+.slider.delay_volume {
+	float: left;
+	top: 50px;
+	height: 100px;
+	width: 10px;
+	left: 92px;
+}
+.slider.delay_feedback {
+	float: left;
+	top: 50px;
+	height: 100px;
+	width: 10px;
+	left: 138px;
+}
 
 .light {
 	position: absolute;

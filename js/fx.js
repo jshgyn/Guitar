@@ -5,6 +5,7 @@ var dryGain = null;
 var wetGain = null;
 var wetGainVal = 1;  
 
+var pedalID = 0; 
 var toReset = new Array(); 
 var latestNode = null; 
 
@@ -13,42 +14,90 @@ var latestNode = null;
 function Delay() {
     var self = this;
     self.setTime = function(newDelayTime) {
+        newDelayTime = newDelayTime/100;
+        if (newDelayTime==0) { newDelayTime==1; }
         self.delayTime = newDelayTime;
         self.delayNode.delayTime.value = self.delayTime;
     }
     self.setVolume = function(newDelayVolume) {
-        self.delayVolume = newDelayVolume;
-        wetGain.gain.value = self.delayVolume;
-        if (wetGain.gain.value > 1) { wetGain.gain.value = 1; }
-    }
-    self.setFeedback = function(newDelayFeedback) {
-        self.delayFeedback = newDelayFeedback;
+        newDelayVolume = newDelayVolume/100;
+        // if (newDelayFeedback==0) { newDelayFeedback==1; }
+        self.delayFeedback = newDelayVolume;
         self.delayGainNode.gain.value = self.delayFeedback;
         if (self.delayGainNode.gain.value > 1) { self.delayGainNode.gain.value = 1; }
     }
+    self.setFeedback = function(newDelayFeedback) {
+        newDelayFeedback = newDelayFeedback/100;
+        if (newDelayFeedback==0) { newDelayFeedback==1; }
+        self.delayVolume = newDelayFeedback;
+        wetGain.gain.value = self.delayVolume;
+        if (wetGain.gain.value > 1) { wetGain.gain.value = 1; }
+    }
+
+    self.hideControls = function () {
+        self.timeKnobDiv.style.display = 'none';
+        self.volumeKnobDiv.style.display = 'none';
+        self.feedbackKnobDiv.style.display = 'none';
+        self.timeSliderDiv.style.display = 'none';
+        self.volumeSliderDiv.style.display = 'none';
+        self.feedbackSliderDiv.style.display = 'none';
+    }
+    self.showKnobs = function () {
+        self.timeKnobDiv.style.display = 'block';
+        self.volumeKnobDiv.style.display = 'block';
+        self.feedbackKnobDiv.style.display = 'block';
+    }
+    self.showSliders = function () {
+        self.timeSliderDiv.style.display = 'block';
+        self.volumeSliderDiv.style.display = 'block';
+        self.feedbackSliderDiv.style.display = 'block';
+    }
+
+    self.changeControls = function (type) {
+        switch (type)   
+        {
+            case "knobs" :
+                self.hideControls();
+                self.showKnobs();
+                self.controlType = type;
+                break;  
+            case "sliders" :
+                self.hideControls();
+                self.showSliders();
+                self.controlType = type;
+                break; 
+        }
+    }
+    self.toggleControls = function() {
+        switch (self.controlType)   
+        {
+            case "knobs" :
+                self.changeControls("sliders");
+                break;  
+            case "sliders" :
+                self.changeControls("knobs");                
+                break; 
+        }
+    }
+ 
     self.delayOn = function () {
-        self.delayNode = audioContext.createDelay();
+
         self.delayNode.delayTime.value = self.delayTime;
 
-        self.delayGainNode = audioContext.createGain();
         self.delayGainNode.gain.value = self.delayFeedback;
-
-        self.delayGainNode.connect( self.delayNode );
-        self.delayNode.connect( self.delayGainNode );
-
         wetGain.connect(self.delayNode);
+        // self.delayNode.connect( audioContext.destination );
+
         self.delayNode.connect( audioContext.destination );
-        latestNode.connect(self.delayNode);
-        self.delayNode.connect( audioContext.destination );
-        latestNode = self.delayNode;
 
         self.delayActive = true;
-        audioInput.connect( self.delayNode );
+        // audioInput.connect( self.delayNode );
         $(self.lightDiv).show();
     }
     self.delayOff = function() {
         self.delayNode.disconnect(0);
-        self.delayGainNode.disconnect(0);
+        // self.delayGainNode.disconnect(0);
+        // wetGain.disconnect(0);
         self.delayActive = false;
         $(self.lightDiv).hide();
     }
@@ -73,19 +122,40 @@ function Delay() {
 
     self.setUpDelay = function() {
 
+        pedalID ++;
+        this.pedalID = pedalID;
+
         self.delayTime = 0.1;
         self.delayFeedback = 0.1;
         wetGainVal = 1;
         toReset[toReset.length] = self;
 
-        
+        self.delayNode = audioContext.createDelay();
+        self.delayNode.delayTime.value = self.delayTime;
+
+        self.delayGainNode = audioContext.createGain();
+        self.delayGainNode.gain.value = self.delayFeedback;
+
+        self.delayGainNode.connect( self.delayNode );
+        self.delayNode.connect( self.delayGainNode );
+
+        latestNode.connect(self.delayNode);
+        // self.delayNode.connect( audioContext.destination );
+        latestNode = self.delayNode;
+
+        wetGain.connect(self.delayNode);
+        // self.delayNode.connect(wetGain);
+
         // html
-        this.containerDiv = document.createElement("div"); this.containerDiv.className = "pedal delay_pedal";
-        this.backgroundDiv = document.createElement("div"); this.backgroundDiv.className = "background delay_background";
-        this.lightDiv = document.createElement("div"); this.lightDiv.className = "light delay_light";
-        this.switchDiv = document.createElement("div"); this.switchDiv.className = "switch delay_switch";
+        this.containerDiv = document.createElement("div"); this.containerDiv.className = "pedal delay_pedal " + this.pedalID ; 
+        this.backgroundDiv = document.createElement("div"); this.backgroundDiv.className = "background delay_background " + this.pedalID ; 
+        this.lightDiv = document.createElement("div"); this.lightDiv.className = "light delay_light " + this.pedalID ; 
+        this.lightDiv.addEventListener('click', this.toggleControls);
+        this.switchDiv = document.createElement("div"); this.switchDiv.className = "switch delay_switch " + this.pedalID ; 
         this.switchDiv.addEventListener('click', this.delayToggle);
-        this.timeKnobDiv = document.createElement("div"); this.timeKnobDiv.className = "knob delay_time";
+ 
+        this.timeSliderDiv = document.createElement("div"); this.timeSliderDiv.className = "slider delay_time " + this.pedalID ; 
+        this.timeKnobDiv = document.createElement("div"); this.timeKnobDiv.className = "knob delay_time " + this.pedalID ; 
         $(this.timeKnobDiv).propeller({inertia: 0, speed: 0, step: 5, onRotate: function() { 
             // if (driveAmountOffsetSet==0)
             // {
@@ -93,11 +163,13 @@ function Delay() {
                 if (this.angle>0) { var delayTimeOffset = 25; var delayTimeOffsetSet = 1;}
             // }
             var angle = this.angle + delayTimeOffset;
-            var newDelayTime = (angle/360);
+            var newDelayTime = (angle/360)*100;
             self.setTime(newDelayTime);
             console.log(newDelayTime);
         }});
-        this.volumeKnobDiv = document.createElement("div"); this.volumeKnobDiv.className = "knob delay_volume";
+
+        this.volumeSliderDiv = document.createElement("div"); this.volumeSliderDiv.className = "slider delay_volume " + this.pedalID ; 
+        this.volumeKnobDiv = document.createElement("div"); this.volumeKnobDiv.className = "knob delay_volume " + this.pedalID ; 
         $(this.volumeKnobDiv).propeller({inertia: 0, speed: 0, step: 5, onRotate: function() { 
             // if (driveAmountOffsetSet==0)
             // {
@@ -105,12 +177,13 @@ function Delay() {
                 if (this.angle>0) { var delayVolumeOffset = 25; var delayVolumeOffsetSet = 1;}
             // }
             var angle = this.angle + delayVolumeOffset;
-            var newDelayVolume = (angle/360);
+            var newDelayVolume = (angle/360)*100;
             self.setVolume(newDelayVolume);
             console.log(newDelayVolume);
         }});
 
-        this.feedbackKnobDiv = document.createElement("div"); this.feedbackKnobDiv.className = "knob delay_feedback";
+        this.feedbackSliderDiv = document.createElement("div"); this.feedbackSliderDiv.className = "slider delay_feedback " + this.pedalID ; 
+        this.feedbackKnobDiv = document.createElement("div"); this.feedbackKnobDiv.className = "knob delay_feedback " + this.pedalID ; 
         $(this.feedbackKnobDiv).propeller({inertia: 0, speed: 0, step: 5, onRotate: function() { 
             // if (driveAmountOffsetSet==0)
             // {
@@ -118,22 +191,53 @@ function Delay() {
                 if (this.angle>0) { var delayFeedbackOffset = 25; var delayFeedbackOffsetSet = 1;}
             // }
             var angle = this.angle + delayFeedbackOffset;
-            var newDelayFeedback = (angle/360);
+            var newDelayFeedback = (angle/360)*100;
             self.setFeedback(newDelayFeedback);
             console.log(newDelayFeedback);
         }});
+
 
         $(".pedal_section").append(this.containerDiv);
         $(this.containerDiv).append(this.backgroundDiv);
         $(this.containerDiv).append(this.lightDiv);
         $(this.containerDiv).append(this.switchDiv);
         $(this.containerDiv).append(this.timeKnobDiv);
+        $(this.containerDiv).append(this.timeSliderDiv);
         $(this.containerDiv).append(this.volumeKnobDiv);
+        $(this.containerDiv).append(this.volumeSliderDiv);
         $(this.containerDiv).append(this.feedbackKnobDiv);
+        $(this.containerDiv).append(this.feedbackSliderDiv);
+
+
+
         $( ".pedal" ).draggable({ containment: ".bottom_section", scroll: false, cancel: ".knob" });
 
+        $(".slider.delay_time."+this.pedalID).slider({
+            slide: function( event, ui ) { 
+                self.setTime(ui.value); 
+            },
+            value: 100,
+            orientation: "vertical"
+        }); 
+        $(".slider.delay_volume."+this.pedalID).slider({
+            slide: function( event, ui ) { 
+                self.setVolume(ui.value); 
+            },
+            value: 100,
+            orientation: "vertical"
+        });
+        $(".slider.delay_feedback."+this.pedalID).slider({
+            slide: function( event, ui ) { 
+                self.setFeedback(ui.value); 
+            },
+            value: 100,
+            orientation: "vertical"
+        });
+
+
+        this.changeControls("knobs");
+
         this.pedalSetup = true;
-        return this.pedalID;
     }
 
     if (this.pedalSetup != true) { this.setUpDelay(); }
@@ -145,21 +249,60 @@ function Delay() {
 function Drive() {
     var self = this;
     self.setDrive = function(newDriveAmount) {
+        if (newDriveAmount==0) { newDriveAmount ++; }
         self.driveAmount = newDriveAmount;
         self.driveNode.setDrive(self.driveAmount);
     }
 
+    self.hideControls = function () {
+        self.driveKnobDiv.style.display = 'none';
+        self.driveSlideDiv.style.display = 'none';
+        // $(".slider.drive_amount").hide();
+    }
+    self.showKnobs = function () {
+        self.driveKnobDiv.style.display = 'block';
+    }
+    self.showSliders = function () {
+        self.driveSlideDiv.style.display = 'block';
+    }
+
+    self.changeControls = function (type) {
+        switch (type)   
+        {
+            case "knobs" :
+                self.hideControls();
+                self.showKnobs();
+                self.controlType = type;
+                break;  
+            case "sliders" :
+                self.hideControls();
+                self.showSliders();
+                self.controlType = type;
+                break; 
+        }
+    }
+    self.toggleControls = function() {
+        switch (self.controlType)   
+        {
+            case "knobs" :
+                self.changeControls("sliders");
+                break;  
+            case "sliders" :
+                self.changeControls("knobs");                
+                break; 
+        }
+    }
+
+
     self.driveToggle = function () {
         if (self.driveActive != true)
         {
-            self.driveNode = new WaveShaper( audioContext );
             // self.driveNode.output.connect( wetGain );
             // self.driveNode.output.connect( dryGain );
 
-            latestNode.connect(self.driveNode.output);
-            self.driveNode.output.connect(audioContext.destination);
-            latestNode = self.driveNode.output;
-
+        latestNode.connect(self.driveNode.output);
+        self.driveNode.output.connect(audioContext.destination);
+        latestNode = self.driveNode.output;
             self.driveNode.setDrive(self.driveAmount);
             self.driveActive = true;
             audioInput.connect( self.driveNode.input );
@@ -167,7 +310,7 @@ function Drive() {
         }
         else 
         {
-            self.driveNode.input.disconnect(0);
+            self.driveNode.output.disconnect(0);
             self.driveActive = false;
             $(self.lightDiv).hide();
         }
@@ -178,16 +321,25 @@ function Drive() {
         }
     }
     self.setUpDrive = function() {
-        this.driveAmount = 50.0;
+        pedalID ++;
+        this.pedalID = pedalID;
+        this.driveAmount = 1.0;
+
+        self.driveNode = new WaveShaper( audioContext );
+
+        // latestNode.connect(self.driveNode.output);
+        // self.driveNode.output.connect(audioContext.destination);
+        // latestNode = self.driveNode.output;
 
         // html
-        this.containerDiv = document.createElement("div"); this.containerDiv.className = "pedal drive_pedal";
-        this.backgroundDiv = document.createElement("div"); this.backgroundDiv.className = "background drive_background";
-        this.lightDiv = document.createElement("div"); this.lightDiv.className = "light drive_light";
-        this.switchDiv = document.createElement("div"); this.switchDiv.className = "switch drive_switch";
+        this.containerDiv = document.createElement("div"); this.containerDiv.className = "pedal drive_pedal " + this.pedalID ; 
+        this.backgroundDiv = document.createElement("div"); this.backgroundDiv.className = "background drive_background " + this.pedalID ; 
+        this.lightDiv = document.createElement("div"); this.lightDiv.className = "light drive_light " + this.pedalID ; 
+        this.lightDiv.addEventListener('click', this.toggleControls);
+        this.switchDiv = document.createElement("div"); this.switchDiv.className = "switch drive_switch " + this.pedalID ;
         this.switchDiv.addEventListener('click', this.driveToggle);
-        this.knobDiv = document.createElement("div"); this.knobDiv.className = "knob drive_amount";
-        $(this.knobDiv).propeller({inertia: 0, speed: 0, step: 5, onRotate: function() { 
+        this.driveKnobDiv = document.createElement("div"); this.driveKnobDiv.className = "knob drive_amount " + this.pedalID ;
+        $(this.driveKnobDiv).propeller({inertia: 0, speed: 0, step: 5, onRotate: function() { 
             // if (driveAmountOffsetSet==0)
             // {
                 if (this.angle<0) { var driveAmountOffset = 335; var driveAmountOffsetSet = 1;}
@@ -198,16 +350,29 @@ function Drive() {
             self.setDrive(newDriveAmount);
             console.log(newDriveAmount);
         }});
+        this.driveSlideDiv = document.createElement("div"); this.driveSlideDiv.className = "slider drive_amount " + this.pedalID ; 
 
         $(".pedal_section").append(this.containerDiv);
         $(this.containerDiv).append(this.backgroundDiv);
         $(this.containerDiv).append(this.lightDiv);
         $(this.containerDiv).append(this.switchDiv);
-        $(this.containerDiv).append(this.knobDiv);
+        $(this.containerDiv).append(this.driveKnobDiv);
+        $(this.containerDiv).append(this.driveSlideDiv);
+        $(".slider.drive_amount."+this.pedalID).slider({
+            slide: function( event, ui ) { 
+                self.setDrive(ui.value); 
+            },
+            value: 100,
+            // orientation: "vertical"
+        }); 
         $( ".pedal" ).draggable({ containment: ".bottom_section", scroll: false, cancel: ".knob" });
 
+
+        this.changeControls("knobs");
+
+
+
         this.pedalSetup = true;
-        return this.pedalID;
     }
 
     if (this.pedalSetup != true) { this.setUpDrive(); }
@@ -264,12 +429,13 @@ function Radio() {
         }
     }
     self.setUpRadio = function() {
-
+        pedalID ++;
+        this.pedalID = pedalID;
         // html
-        this.containerDiv = document.createElement("div"); this.containerDiv.className = "pedal drive_pedal";
-        this.backgroundDiv = document.createElement("div"); this.backgroundDiv.className = "background drive_background";
-        this.lightDiv = document.createElement("div"); this.lightDiv.className = "light drive_light";
-        this.switchDiv = document.createElement("div"); this.switchDiv.className = "switch drive_switch";
+        this.containerDiv = document.createElement("div"); this.containerDiv.className = "pedal drive_pedal " + this.pedalID;
+        this.backgroundDiv = document.createElement("div"); this.backgroundDiv.className = "background drive_background " + this.pedalID;
+        this.lightDiv = document.createElement("div"); this.lightDiv.className = "light drive_light " + this.pedalID;
+        this.switchDiv = document.createElement("div"); this.switchDiv.className = "switch drive_switch " + this.pedalID;
         this.switchDiv.addEventListener('click', this.radioToggle);
 
         $(".pedal_section").append(this.containerDiv);
@@ -280,7 +446,6 @@ function Radio() {
         $( ".pedal" ).draggable({ containment: ".bottom_section", scroll: false, cancel: ".knob" });
 
         this.pedalSetup = true;
-        return this.pedalID;
     }
 
     if (this.pedalSetup != true) { this.setUpRadio(); }
@@ -307,9 +472,9 @@ function recStop() {
 
 function loopStop() {
     document.getElementById('loopPlayer').pause();
-    document.getElementById('loopPlayer').currentTime = 0;     
 }
 function loopStart() {
+    document.getElementById('loopPlayer').currentTime = 0;     
     document.getElementById('loopPlayer').play();
 }
 
@@ -323,6 +488,12 @@ var totalTap = 0;
 var tapCount = 0;
 var countDownCount = 4;
 var recCount = 8;
+var recBeats = 8;
+
+function changeBars(bars) {
+    recBeats = 4*bars;
+    recCount = recBeats;
+}
 
 function playClick() {
     document.getElementById('clickPlayer').currentTime = 0;   
@@ -338,14 +509,12 @@ function recordTap() {
         }
         else
         {
-            recCount = 8;
+            recCount = recBeats;
             setTimeout(recStop, averageTap);
         }
     }, averageTap);   
 }
 function countDown() {
-    // for (i=0; i<4; i++)
-    // {
     setTimeout(function() {
         playClick();
         countDownCount --;        
@@ -358,16 +527,19 @@ function countDown() {
         {
             countDownCount = 4;
             setTimeout(function() {
+                tapComplete = false;
                 recStart();
                 updateCountdownText(0, true);
             }, averageTap);
             recordTap();
         }
     }, averageTap);
-    // }
 }
 
 function newTap() {
+    loopStop();
+    updateLoopStartStop("clear");
+
     playClick();
     tapCount ++;
 
@@ -410,23 +582,9 @@ $(window).keypress(function(e) {
                 recStop();
             }
             break;
-
         case 32 :
-            if (tapComplete==false && tapInProgress==false)
-            {
-                // start tap
-                newTap();
-            }
-            else if (tapComplete==false && tapInProgress==true)  
-            {
-                // carry on tap
-                newTap();
-            }
-            else if (tapComplete==true)
-            {
-                // end tap
-                // countDown();
-            }
+            newTap();
+            break;
     }
 });
 
@@ -447,7 +605,7 @@ function audioStream(stream) {
     audioInput.connect(wetGain);
 
     dryGain.connect( audioContext.destination );
-    wetGain.connect( audioContext.destination );
+    // wetGain.connect( audioContext.destination );
 }
 
 function addPedal (type) {

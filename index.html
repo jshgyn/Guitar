@@ -27,28 +27,40 @@
 				Radio Pedal
 			</div>
 
-			<div class="menu_item" id="rec_start">
+			<div class="menu_item" id="test">
+				Test: Reset
+			</div>		
+<!-- 			<div class="menu_item" id="rec_start">
 				Record Start
 			</div>
 			<div class="menu_item" id="rec_stop">
 				Record Stop
-			</div>
-			<div class="menu_item" id="loop_start">
-				Start Loop
-			</div>		
-			<div class="menu_item" id="loop_stop">
-				Stop Loop
-			</div>		
+			</div>	 -->	
 		</div>
 		<div id="show_menu"></div>
 		<div class="loop_countdown" id="loop_countdown"></div>
 		<div class="top_section">
 			<div class="loop_section">
 				<div class="loop_startstop" id="loop_startstop"></div>
+				<div class="loop_bars" id="loop_bars">
+					<select>
+						<option value="1">1 bar</option>
+						<option value="2" selected="selected">2 bars</option>
+						<option value="4">4 bars</option>						
+						<option value="8">8 bars</option>						
+						<option value="12">12 bars</option>						
+					</select>
+				</div>
 				<div class="loop_light" id="loop_light"></div>
+				<div class="loop_bar_display" id="loop_bar_display">Bars: 2</div>				
 				<div class="loop_bpm" id="loop_bpm"></div>				
 				<audio id="loopPlayer" loop autoplay></audio>
 				<audio id="clickPlayer"><source src="sound/click.wav" type="audio/wav"></source></audio>
+			</div>
+			<div class="backing_section">
+				<div class="backing_startstop" id="backing_startstop"></div>
+				<div class="backing_file" id="backing_file"><input type="file" id="fileIn"/></div>
+				<audio id="backingPlayer" loop><source src="sound/backing.wav" type="audio/wav"></source></audio>
 			</div>
 		</div>
 		<div class="bottom_section">

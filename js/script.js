@@ -2,7 +2,7 @@ $( document ).ready(function() {
 
 	$(".loop_countdown").hide();
 // -------- MENU --------------------------------
-	showMenu();
+	// showMenu();
 	// show menu
 	function showMenu() {
 		$("#show_menu").animate({width:"0px"}, 100, function() {
@@ -38,33 +38,64 @@ $( document ).ready(function() {
 	$("#rec_stop").click(function() {	
 		recStop();
 	});
-	$("#loop_stop").click(function() {	
-		loopStop();
-	});
-	$("#loop_start").click(function() {	
-		loopStart();
-	});	
 
+	$("#test").click(function() {
+		location.reload();
+	});
 
 	// -------- UI -------------------------------
 	$("#loop_startstop").click(function() {	
-		if (startOrStop=="start")
+		if (loopStartOrStop=="start")
 		{
 			loopStart();
 			updateLoopLight("green");
 			updateLoopStartStop("stop");
 		}
-		else if (startOrStop=="stop")
+		else if (loopStartOrStop=="stop")
 		{
 			loopStop();
 			updateLoopLight("off");
 			updateLoopStartStop("start");
 		}
-
 	});
 
+	$('select').on('change', function() {
+		document.getElementById("loop_bar_display").innerHTML = "Bars: " + this.value;
+		changeBars(this.value);
+	});
+
+
+    var fileIn = $('#fileIn')[0];
+    $(fileIn).change(function () {
+    	document.getElementById('backingPlayer').src = window.URL.createObjectURL(fileIn.files[0]);
+    });
+
+	$("#backing_startstop").click(function() {	
+		if (backingStartOrStop=="start")
+		{
+			backingStart();
+			backingStartOrStop = "stop";
+		}
+		else if (backingStartOrStop=="stop")
+		{
+			backingStop();
+			backingStartOrStop = "start";
+		}	
+	});
+
+	function backingStart() {
+	    document.getElementById('backingPlayer').currentTime = 0;   
+	    document.getElementById('backingPlayer').play(); 
+	    $('#backing_startstop').css('background-color', '#0f0');   
+	}
+	function backingStop() {
+	    document.getElementById('backingPlayer').pause();           
+	    $('#backing_startstop').css('background-color', '#000');   
+	}
+
 });
-var startOrStop = "stop";
+var loopStartOrStop = "stop";
+var backingStartOrStop = "start";
 // -------- UI -------------------------------
 function updateBPMText(averageTap) {
 	var averageBPM = Math.round(60000/averageTap);
@@ -91,10 +122,14 @@ function updateLoopLight(colour) {
 function updateLoopStartStop(i) {
 	if (i=="start"){ 
 		document.getElementById("loop_startstop").innerHTML = "Start";
-		startOrStop = "start"; 
+		loopStartOrStop = "start"; 
 	}
 	else if (i=="stop"){ 
 		document.getElementById("loop_startstop").innerHTML = "Stop";
-		startOrStop = "stop"; 
+		loopStartOrStop = "stop"; 
+	}
+	else if (i=="clear"){ 
+		document.getElementById("loop_startstop").innerHTML = "";
 	}
 }
+
