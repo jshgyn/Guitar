@@ -31,6 +31,10 @@ $( document ).ready(function() {
 	$("#new_radio").click(function() {	
 		addPedal("radio");
 	});
+	$("#new_bitcrusher").click(function() {	
+		addPedal("bitcrusher");
+	});
+
 
 	$("#rec_start").click(function() {	
 		recStart();

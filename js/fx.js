@@ -300,9 +300,10 @@ function Drive() {
             // self.driveNode.output.connect( wetGain );
             // self.driveNode.output.connect( dryGain );
 
-        latestNode.connect(self.driveNode.output);
-        self.driveNode.output.connect(audioContext.destination);
-        latestNode = self.driveNode.output;
+            latestNode.connect(self.driveNode.output);
+            self.driveNode.output.connect(audioContext.destination);
+            latestNode = self.driveNode.output;
+
             self.driveNode.setDrive(self.driveAmount);
             self.driveActive = true;
             audioInput.connect( self.driveNode.input );
@@ -450,6 +451,80 @@ function Radio() {
 
     if (this.pedalSetup != true) { this.setUpRadio(); }
     this.radioToggle();
+}
+
+// --------- Bitcrusher ---------------------------------------------------------------------------
+
+function BitCrusher() {
+    var self = this;
+    self.bufferSize = 4096
+
+    self.bitCrusherToggle = function () {
+        if (self.bitCrusherActive != true)
+        {
+            // http://noisehack.com/custom-audio-effects-javascript-web-audio-api/
+            self.bitCrusherNode = audioContext.createScriptProcessor(self.bufferSize, 1, 1);
+            self.bitCrusherNode.bits = 16; // between 1 and 16
+            self.bitCrusherNode.normfreq = 0.1; // between 0.0 and 1.0
+            var step = Math.pow(1/2, self.bitCrusherNode.bits);
+            var phaser = 0;
+            var last = 0;
+            self.bitCrusherNode.onaudioprocess = function(e) {
+                var input = e.inputBuffer.getChannelData(0);
+                var output = e.outputBuffer.getChannelData(0);
+                for (var i = 0; i < self.bufferSize; i++) {
+                    phaser += self.bitCrusherNode.normfreq;
+                    if (phaser >= 1.0) {
+                        phaser -= 1.0;
+                        last = step * Math.floor(input[i] / step + 0.5);
+                    }
+                    output[i] = last;
+                }
+            };
+
+            latestNode.connect(self.bitCrusherNode);
+            self.bitCrusherNode.connect(audioContext.destination);
+            latestNode = self.bitCrusherNode;
+
+
+            self.bitCrusherActive = true;
+            audioInput.connect(self.bitCrusherNode);
+            $(self.lightDiv).show();
+        }
+        else 
+        {
+            self.bitCrusherActive = false;
+            self.bitCrusherNode.disconnect(0);
+            $(self.lightDiv).hide();
+        }
+
+        for (i=0;i<toReset.length;i++)
+        {
+            toReset[i].restart();
+        }
+    }
+    self.setUpBitCrusher = function() {
+        pedalID ++;
+        this.pedalID = pedalID;
+        // html
+        this.containerDiv = document.createElement("div"); this.containerDiv.className = "pedal drive_pedal " + this.pedalID;
+        this.backgroundDiv = document.createElement("div"); this.backgroundDiv.className = "background drive_background " + this.pedalID;
+        this.lightDiv = document.createElement("div"); this.lightDiv.className = "light drive_light " + this.pedalID;
+        this.switchDiv = document.createElement("div"); this.switchDiv.className = "switch drive_switch " + this.pedalID;
+        this.switchDiv.addEventListener('click', this.bitCrusherToggle);
+
+        $(".pedal_section").append(this.containerDiv);
+        $(this.containerDiv).append(this.backgroundDiv);
+        $(this.containerDiv).append(this.lightDiv);
+        $(this.containerDiv).append(this.switchDiv);
+        $(this.containerDiv).append(this.knobDiv);
+        $( ".pedal" ).draggable({ containment: ".bottom_section", scroll: false, cancel: ".knob" });
+
+        this.pedalSetup = true;
+    }
+
+    if (this.pedalSetup != true) { this.setUpBitCrusher(); }
+    this.bitCrusherToggle();
 }
 
 // --------- LOOPER ---------------------------------------------------------------------------
@@ -619,7 +694,10 @@ function addPedal (type) {
             break; 
         case "radio" :
             new Radio();
-            break;         
+            break;   
+        case "bitcrusher" :
+            new BitCrusher();
+            break;      
     }
 
 }
