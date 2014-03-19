@@ -71,12 +71,12 @@ body {
 /*------------------------ LOOPER ------------------------*/
 
 .loop_section {
-	color: white;
+	color: black;
 	position: relative;
 	width: 20%;
 	height: 66px;
 	padding: 3px;
-	background-color: #ddd;
+	background-color: #eee;
 	left: 40%;
 
 	/* Firefox */
@@ -151,8 +151,7 @@ body {
 	position: relative;
 	width: 20%;
 	height: 20px;
-	padding-left: 3px;
-	padding-right: 3px;
+	padding: 0 3px 3px 3px;
 	background-color: #eee;
 	left: 40%;
 
@@ -163,9 +162,10 @@ body {
 	position: absolute;
 	height: 20px;
 	width: 20px;
-	background-color: #000;
+	background-image:url('../img/play.png');
 	left: 10px;
 	cursor: pointer;
+	display:none;
 }
 
 .backing_file {
@@ -201,6 +201,14 @@ body {
 
 .drive_background {
 	background-image:url('../img/japdrive_base.png');
+}
+
+.radio_background {
+	background-image:url('../img/radio_base.png');
+}
+
+.bitcrusher_background {
+	background-image:url('../img/bitcrusher_base.png');
 }
 
 .knob {

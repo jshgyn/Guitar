@@ -64,7 +64,7 @@ $( document ).ready(function() {
 	});
 
 	$('select').on('change', function() {
-		document.getElementById("loop_bar_display").innerHTML = "Bars: " + this.value;
+		// document.getElementById("loop_bar_display").innerHTML = "Bars: " + this.value;
 		changeBars(this.value);
 	});
 
@@ -72,6 +72,7 @@ $( document ).ready(function() {
     var fileIn = $('#fileIn')[0];
     $(fileIn).change(function () {
     	document.getElementById('backingPlayer').src = window.URL.createObjectURL(fileIn.files[0]);
+    	$('#backing_startstop').css('display', 'block');
     });
 
 	$("#backing_startstop").click(function() {	
@@ -90,11 +91,11 @@ $( document ).ready(function() {
 	function backingStart() {
 	    document.getElementById('backingPlayer').currentTime = 0;   
 	    document.getElementById('backingPlayer').play(); 
-	    $('#backing_startstop').css('background-color', '#0f0');   
+	    $('#backing_startstop').css('background-image', 'url(img/pause.png)'); 
 	}
 	function backingStop() {
 	    document.getElementById('backingPlayer').pause();           
-	    $('#backing_startstop').css('background-color', '#000');   
+	    $('#backing_startstop').css('background-image', 'url(img/play.png)');
 	}
 
 });

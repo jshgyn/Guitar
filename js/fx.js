@@ -433,10 +433,10 @@ function Radio() {
         pedalID ++;
         this.pedalID = pedalID;
         // html
-        this.containerDiv = document.createElement("div"); this.containerDiv.className = "pedal drive_pedal " + this.pedalID;
-        this.backgroundDiv = document.createElement("div"); this.backgroundDiv.className = "background drive_background " + this.pedalID;
-        this.lightDiv = document.createElement("div"); this.lightDiv.className = "light drive_light " + this.pedalID;
-        this.switchDiv = document.createElement("div"); this.switchDiv.className = "switch drive_switch " + this.pedalID;
+        this.containerDiv = document.createElement("div"); this.containerDiv.className = "pedal radio_pedal " + this.pedalID;
+        this.backgroundDiv = document.createElement("div"); this.backgroundDiv.className = "background radio_background " + this.pedalID;
+        this.lightDiv = document.createElement("div"); this.lightDiv.className = "light radio_light " + this.pedalID;
+        this.switchDiv = document.createElement("div"); this.switchDiv.className = "switch radio_switch " + this.pedalID;
         this.switchDiv.addEventListener('click', this.radioToggle);
 
         $(".pedal_section").append(this.containerDiv);
@@ -507,10 +507,10 @@ function BitCrusher() {
         pedalID ++;
         this.pedalID = pedalID;
         // html
-        this.containerDiv = document.createElement("div"); this.containerDiv.className = "pedal drive_pedal " + this.pedalID;
-        this.backgroundDiv = document.createElement("div"); this.backgroundDiv.className = "background drive_background " + this.pedalID;
-        this.lightDiv = document.createElement("div"); this.lightDiv.className = "light drive_light " + this.pedalID;
-        this.switchDiv = document.createElement("div"); this.switchDiv.className = "switch drive_switch " + this.pedalID;
+        this.containerDiv = document.createElement("div"); this.containerDiv.className = "pedal bitcrusher_pedal " + this.pedalID;
+        this.backgroundDiv = document.createElement("div"); this.backgroundDiv.className = "background bitcrusher_background " + this.pedalID;
+        this.lightDiv = document.createElement("div"); this.lightDiv.className = "light bitcrusher_light " + this.pedalID;
+        this.switchDiv = document.createElement("div"); this.switchDiv.className = "switch bitcrusher_switch " + this.pedalID;
         this.switchDiv.addEventListener('click', this.bitCrusherToggle);
 
         $(".pedal_section").append(this.containerDiv);
